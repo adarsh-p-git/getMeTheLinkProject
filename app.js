@@ -48,7 +48,15 @@ app.post('/webhook', async (req, res) => {
     }
     res.status(200).send('EVENT_RECEIVED');
 });
-
+app.get('/webhook', (req, res) => {
+    // Verification logic
+    if (req.query['hub.mode'] === 'subscribe' &&
+        req.query['hub.verify_token'] === "veri123") {
+      res.status(200).send(req.query['hub.challenge']);
+    } else {
+      res.sendStatus(403);
+    }
+  });
 // Function to send message via Instagram API
 async function sendMessage(recipientId, messageText) {
     const url = `https://graph.facebook.com/v9.0/me/messages`;
